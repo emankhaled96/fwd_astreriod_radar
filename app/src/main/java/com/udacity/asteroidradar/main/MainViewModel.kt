@@ -5,10 +5,12 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.udacity.asteroidradar.DateUtils
 import com.udacity.asteroidradar.model.Asteroid
+import com.udacity.asteroidradar.DateUtils
 import com.udacity.asteroidradar.api.ApiService
+import com.udacity.asteroidradar.api.parseAsteroidsJsonResult
 import kotlinx.coroutines.launch
+import org.json.JSONObject
 
 class MainViewModel : ViewModel() {
     private val _pictureOfTheDayURL = MutableLiveData<String>()
@@ -28,7 +30,7 @@ class MainViewModel : ViewModel() {
 
     private fun getPictureOfDay() = viewModelScope.launch {
         try {
-            val imageResponse = ApiService.retrofitService.getImageOfDay()
+            val imageResponse = ApiService.retrofitServiceImage.getImageOfDay()
             if (imageResponse.mediaType == "image") {
                 _pictureOfTheDayURL.postValue(imageResponse.url)
             }
@@ -41,12 +43,12 @@ class MainViewModel : ViewModel() {
 
     private fun getAsteroids() = viewModelScope.launch {
         try {
-            val asteroidResponse = ApiService.retrofitService.getAsteroids(
+            val asteroidResponse = ApiService.retrofitServiceAsteroids.getAsteroids(
                 startDate = DateUtils().getToday(),
                 endDate = DateUtils().getEndDate()
             )
-            Log.d("asteroidsResponse", asteroidResponse.toString())
-            _asteroids.postValue(asteroidResponse.nearAsteroid.values.flatten())
+            Log.d("asteroidsResponse", asteroidResponse)
+            _asteroids.postValue(parseAsteroidsJsonResult(JSONObject(asteroidResponse)))
 
 
         } catch (e: Exception) {

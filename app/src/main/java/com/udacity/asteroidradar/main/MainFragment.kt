@@ -41,7 +41,7 @@ class MainFragment : Fragment() {
         adapter = AsteroidAdapter(AsteroidAdapter.OnClickListener {
             this.findNavController()
                 .navigate(MainFragmentDirections.actionShowDetail(it))
-            Log.d("Clicked", it.name)
+            Log.d("Clicked", it.codename)
         })
         binding.asteroidRecycler.adapter = adapter
     }
@@ -51,6 +51,7 @@ class MainFragment : Fragment() {
             Picasso.get().load(it).into(binding.activityMainImageOfTheDay)
         }
         viewModel.asteroids.observe(viewLifecycleOwner) {
+            Log.d("asteroids" , it.toString())
             adapter.submitList(it)
         }
 

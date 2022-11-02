@@ -35,11 +35,11 @@ fun parseAsteroidsJsonResult(jsonResult: JSONObject): ArrayList<Asteroid> {
                 val isPotentiallyHazardous = asteroidJson
                     .getBoolean("is_potentially_hazardous_asteroid")
 
-//                val asteroid = Asteroid(
-//                    id, codename, formattedDate, absoluteMagnitude,
-//                    estimatedDiameter, relativeVelocity, distanceFromEarth, isPotentiallyHazardous
-//                )
-//                asteroidList.add(asteroid)
+                val asteroid = Asteroid(
+                    id, codename, formattedDate, absoluteMagnitude,
+                    estimatedDiameter, relativeVelocity, distanceFromEarth, isPotentiallyHazardous
+                )
+                asteroidList.add(asteroid)
             }
         }
     }
