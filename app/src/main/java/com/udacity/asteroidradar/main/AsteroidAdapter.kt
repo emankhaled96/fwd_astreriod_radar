@@ -5,26 +5,25 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.udacity.asteroidradar.Asteroid
+import com.udacity.asteroidradar.model.Asteroid
 import com.udacity.asteroidradar.R
 import com.udacity.asteroidradar.databinding.AsteroidItemBinding
-import com.udacity.asteroidradar.databinding.FragmentMainBinding
 
-class AsteroidAdapter(val onClickListener: OnClickListener) :
+class AsteroidAdapter(private val onClickListener: OnClickListener) :
     ListAdapter<Asteroid, AsteroidAdapter.AsteroidViewHolder>(DiffCallback) {
 
     class AsteroidViewHolder(private var binding: AsteroidItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun updateUI(asteriod: Asteroid?) {
-            binding.asteroidDate.text = asteriod?.closeApproachDate
-            binding.asteroidText.text = asteriod?.codename
-            if(asteriod?.isPotentiallyHazardous == true){
-                binding.imageView.setImageResource(R.drawable.ic_status_potentially_hazardous)
-
-            }else if(asteriod?.isPotentiallyHazardous == false){
-                binding.imageView.setImageResource(R.drawable.ic_status_normal)
-            }
-
+//            binding.asteroidDate.text = asteriod?.closeApproachData?.get(0)?.closeApproachDate
+//            binding.asteroidText.text = asteriod?.name
+//            if(asteriod?.isPotentiallyHazardous == true){
+//                binding.imageView.setImageResource(R.drawable.ic_status_potentially_hazardous)
+//
+//            }else if(asteriod?.isPotentiallyHazardous == false){
+//                binding.imageView.setImageResource(R.drawable.ic_status_normal)
+//            }
+            binding.asteroid = asteriod
             binding.executePendingBindings()
         }
 
@@ -52,6 +51,9 @@ class AsteroidAdapter(val onClickListener: OnClickListener) :
     override fun onBindViewHolder(holder: AsteroidViewHolder, position: Int) {
         val asteriod = getItem(position)
         holder.updateUI(asteriod)
+        holder.itemView.setOnClickListener {
+            onClickListener.onClick(asteriod)
+        }
     }
 }
 

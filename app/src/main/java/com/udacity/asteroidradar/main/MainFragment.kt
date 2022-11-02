@@ -5,8 +5,8 @@ import android.util.Log
 import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import com.squareup.picasso.Picasso
-import com.udacity.asteroidradar.Asteroid
 import com.udacity.asteroidradar.R
 import com.udacity.asteroidradar.databinding.FragmentMainBinding
 
@@ -39,18 +39,19 @@ class MainFragment : Fragment() {
 
     private fun setupUI() {
         adapter = AsteroidAdapter(AsteroidAdapter.OnClickListener {
-            Log.d("Clicked", it.codename)
+           this.findNavController()
+                .navigate(MainFragmentDirections.actionShowDetail(it))
+            Log.d("Clicked", it.name)
         })
         binding.asteroidRecycler.adapter = adapter
-        val asteroid1 = Asteroid(1, "test 1", "1/11/2022", 22.5, 15.5, 20.5, 10000.5, true)
-        val asteroid2 = Asteroid(2, "test 2", "1/11/2022", 22.5, 15.5, 20.5, 10000.5, false)
-        val list = listOf(asteroid1, asteroid2, asteroid2, asteroid1, asteroid2)
-        adapter.submitList(list)
     }
 
     private fun setUpObservers() {
         viewModel.pictureOfDayURL.observe(viewLifecycleOwner) {
             Picasso.get().load(it).into(binding.activityMainImageOfTheDay)
+        }
+        viewModel.asteroids.observe(viewLifecycleOwner) {
+            adapter.submitList(it)
         }
     }
 
