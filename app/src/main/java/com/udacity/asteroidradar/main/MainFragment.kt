@@ -39,7 +39,7 @@ class MainFragment : Fragment() {
 
     private fun setupUI() {
         adapter = AsteroidAdapter(AsteroidAdapter.OnClickListener {
-           this.findNavController()
+            this.findNavController()
                 .navigate(MainFragmentDirections.actionShowDetail(it))
             Log.d("Clicked", it.name)
         })
@@ -53,6 +53,7 @@ class MainFragment : Fragment() {
         viewModel.asteroids.observe(viewLifecycleOwner) {
             adapter.submitList(it)
         }
+
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {

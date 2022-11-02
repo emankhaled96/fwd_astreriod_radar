@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.udacity.asteroidradar.DateUtils
 import com.udacity.asteroidradar.model.Asteroid
 import com.udacity.asteroidradar.api.ApiService
 import kotlinx.coroutines.launch
@@ -23,6 +24,8 @@ class MainViewModel : ViewModel() {
         getAsteroids()
     }
 
+
+
     private fun getPictureOfDay() = viewModelScope.launch {
         try {
             val imageResponse = ApiService.retrofitService.getImageOfDay()
@@ -38,7 +41,10 @@ class MainViewModel : ViewModel() {
 
     private fun getAsteroids() = viewModelScope.launch {
         try {
-            val asteroidResponse = ApiService.retrofitService.getAsteroids(startDate = "2022-11-02", endDate = "2022-11-09")
+            val asteroidResponse = ApiService.retrofitService.getAsteroids(
+                startDate = DateUtils().getToday(),
+                endDate = DateUtils().getEndDate()
+            )
             Log.d("asteroidsResponse", asteroidResponse.toString())
             _asteroids.postValue(asteroidResponse.nearAsteroid.values.flatten())
 

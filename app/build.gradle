@@ -66,6 +66,7 @@ dependencies {
     implementation("androidx.room:room-ktx:2.5.0-beta01")
     implementation "androidx.room:room-runtime:2.5.0-beta01"
     kapt "androidx.room:room-compiler:2.5.0-beta01"
+    implementation 'net.danlew:android.joda:2.12.1'
 
     implementation "android.arch.work:work-runtime-ktx:1.0.1"
 
