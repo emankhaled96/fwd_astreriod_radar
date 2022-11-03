@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.*
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.squareup.picasso.Picasso
@@ -13,7 +14,11 @@ import com.udacity.asteroidradar.databinding.FragmentMainBinding
 class MainFragment : Fragment() {
 
     private val viewModel: MainViewModel by lazy {
-        ViewModelProvider(this).get(MainViewModel::class.java)
+        val activity = requireNotNull(this.activity) {
+            "You can only access the viewModel after onViewCreated()"
+        }
+        ViewModelProvider(this, MainViewModel.Factory(activity.application)).get(MainViewModel::class.java)
+
     }
     private lateinit var binding: FragmentMainBinding
     private lateinit var adapter: AsteroidAdapter
@@ -50,7 +55,7 @@ class MainFragment : Fragment() {
         viewModel.pictureOfDayURL.observe(viewLifecycleOwner) {
             Picasso.get().load(it).into(binding.activityMainImageOfTheDay)
         }
-        viewModel.asteroids.observe(viewLifecycleOwner) {
+        viewModel.asteroids.observe(viewLifecycleOwner ) {
             Log.d("asteroids" , it.toString())
             adapter.submitList(it)
         }
