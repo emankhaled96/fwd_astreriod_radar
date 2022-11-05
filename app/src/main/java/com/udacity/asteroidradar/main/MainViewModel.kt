@@ -3,9 +3,12 @@ package com.udacity.asteroidradar.main
 import android.app.Application
 import android.util.Log
 import androidx.lifecycle.*
+import com.udacity.asteroidradar.DateUtils
 import com.udacity.asteroidradar.dataSource.local.AsteroidsDatabase
 import com.udacity.asteroidradar.dataSource.remote.ApiService
 import com.udacity.asteroidradar.dataSource.remote.AsteroidApi
+import com.udacity.asteroidradar.domain.dto.Asteroid
+import com.udacity.asteroidradar.domain.mapper.toDomainModel
 import com.udacity.asteroidradar.domain.repository.AsteroidRepository
 import kotlinx.coroutines.launch
 
@@ -20,7 +23,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     private val asteroidApi = ApiService.retrofitService
     private val imageApi = ApiService.retrofitServiceImage
 
-    private val asteroidsRepository = AsteroidRepository(asteroidDao , asteroidApi)
+    private val asteroidsRepository = AsteroidRepository(asteroidDao, asteroidApi)
 
     init {
         viewModelScope.launch {
@@ -30,8 +33,12 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     }
 
 
-       var asteroids = asteroidsRepository.asteroids
+    var asteroids = asteroidsRepository.asteroids
 
+    fun getTodayAsteroids() {
+        asteroids = asteroidsRepository.todayAsteroids
+        Log.d("Asteroids", asteroids.value.toString())
+    }
 
     private fun getPictureOfDay() = viewModelScope.launch {
         try {
@@ -45,6 +52,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
 
         }
     }
+
     class Factory(val app: Application) : ViewModelProvider.Factory {
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
             if (modelClass.isAssignableFrom(MainViewModel::class.java)) {

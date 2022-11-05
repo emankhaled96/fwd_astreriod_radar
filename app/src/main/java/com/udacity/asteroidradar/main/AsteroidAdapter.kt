@@ -11,18 +11,10 @@ import com.udacity.asteroidradar.databinding.AsteroidItemBinding
 class AsteroidAdapter(private val onClickListener: OnClickListener) :
     ListAdapter<Asteroid, AsteroidAdapter.AsteroidViewHolder>(DiffCallback) {
 
-    class AsteroidViewHolder(private var binding: AsteroidItemBinding) :
+    inner class AsteroidViewHolder(private var binding: AsteroidItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun updateUI(asteriod: Asteroid?) {
-//            binding.asteroidDate.text = asteriod?.closeApproachData?.get(0)?.closeApproachDate
-//            binding.asteroidText.text = asteriod?.name
-//            if(asteriod?.isPotentiallyHazardous == true){
-//                binding.imageView.setImageResource(R.drawable.ic_status_potentially_hazardous)
-//
-//            }else if(asteriod?.isPotentiallyHazardous == false){
-//                binding.imageView.setImageResource(R.drawable.ic_status_normal)
-//            }
-            binding.asteroid = asteriod
+        fun updateUI(asteroid: Asteroid?) {
+            binding.asteroid = asteroid
             binding.executePendingBindings()
         }
 
@@ -30,11 +22,11 @@ class AsteroidAdapter(private val onClickListener: OnClickListener) :
 
     companion object DiffCallback : DiffUtil.ItemCallback<Asteroid>() {
         override fun areItemsTheSame(oldItem: Asteroid, newItem: Asteroid): Boolean {
-            return oldItem === newItem
+            return oldItem.id == newItem.id
         }
 
         override fun areContentsTheSame(oldItem: Asteroid, newItem: Asteroid): Boolean {
-            return oldItem.id == newItem.id
+            return oldItem == newItem
         }
 
     }

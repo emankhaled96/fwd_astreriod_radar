@@ -68,6 +68,8 @@ class MainFragment : Fragment() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return true
-    }
+        when (item.itemId) {
+            R.id.show_rent_menu -> viewModel.getTodayAsteroids()
+        }
+        return super.onOptionsItemSelected(item)    }
 }

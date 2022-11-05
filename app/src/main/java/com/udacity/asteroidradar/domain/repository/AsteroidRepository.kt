@@ -18,27 +18,31 @@ import org.json.JSONObject
 
 class AsteroidRepository(
     private val asteroidsDao: AsteroidsDao,
-    private val asteroidApi : AsteroidApi
+    private val asteroidApi: AsteroidApi
 ) {
     val asteroids: LiveData<List<Asteroid>> = Transformations.map(asteroidsDao.getAsteroids()) {
         it.toDomainModel()
     }
-
+    val todayAsteroids: LiveData<List<Asteroid>> =
+        Transformations.map(asteroidsDao.getTodayAsteroids("2022-11-05")) {
+            it.toDomainModel()
+        }
 
     suspend fun refreshAsteroids() {
         withContext(Dispatchers.IO) {
-            try{
+            try {
                 val asteroids = asteroidApi.getAsteroids(
                     DateUtils().getToday(),
                     DateUtils().getEndDate()
                 )
+                asteroidsDao.deleteAll()
                 asteroidsDao.insertAll(
                     *parseAsteroidsJsonResult(
                         JSONObject(asteroids)
                     ).toDatabaseModel()
                 )
-            }catch (e:Exception){
-                Log.d("error" , e.message.toString())
+            } catch (e: Exception) {
+                Log.d("error", e.message.toString())
             }
 
         }
