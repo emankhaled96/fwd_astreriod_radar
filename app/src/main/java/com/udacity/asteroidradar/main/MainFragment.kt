@@ -59,6 +59,10 @@ class MainFragment : Fragment() {
             Log.d("asteroids" , it.toString())
             adapter.submitList(it)
         }
+        viewModel.todayAsteroids.observe(viewLifecycleOwner){
+            adapter.submitList(it)
+
+        }
 
     }
 

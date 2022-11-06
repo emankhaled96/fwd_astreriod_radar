@@ -24,7 +24,7 @@ class AsteroidRepository(
         it.toDomainModel()
     }
     val todayAsteroids: LiveData<List<Asteroid>> =
-        Transformations.map(asteroidsDao.getTodayAsteroids("2022-11-05")) {
+        Transformations.map(asteroidsDao.getTodayAsteroids("2022-11-06")) {
             it.toDomainModel()
         }
 

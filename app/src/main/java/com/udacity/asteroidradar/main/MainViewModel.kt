@@ -32,12 +32,13 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         getPictureOfDay()
     }
 
-
+    private val _todayAsteroids = MutableLiveData<List<Asteroid>>()
+    val todayAsteroids: LiveData<List<Asteroid>>
+        get() = _todayAsteroids
     var asteroids = asteroidsRepository.asteroids
 
     fun getTodayAsteroids() {
-        asteroids = asteroidsRepository.todayAsteroids
-        Log.d("Asteroids", asteroids.value.toString())
+     _todayAsteroids.value = asteroidsRepository.todayAsteroids.value
     }
 
     private fun getPictureOfDay() = viewModelScope.launch {

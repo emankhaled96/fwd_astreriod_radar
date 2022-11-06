@@ -16,7 +16,7 @@ interface AsteroidsDao {
     @Query("DELETE from asteroids_table")
     fun deleteAll()
 
-    @Query("SELECT * FROM asteroids_table WHERE closeApproachDate LIKE :date")
+    @Query("SELECT * FROM asteroids_table WHERE closeApproachDate <=:date ORDER BY date(closeApproachDate) ASC ")
     fun getTodayAsteroids(date:String):LiveData<List<AsteroidsDB>>
 
 }
