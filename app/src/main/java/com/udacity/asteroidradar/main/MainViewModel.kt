@@ -8,6 +8,7 @@ import com.udacity.asteroidradar.dataSource.local.AsteroidsDatabase
 import com.udacity.asteroidradar.dataSource.remote.ApiService
 import com.udacity.asteroidradar.dataSource.remote.AsteroidApi
 import com.udacity.asteroidradar.domain.dto.Asteroid
+import com.udacity.asteroidradar.domain.dto.PictureOfDay
 import com.udacity.asteroidradar.domain.mapper.toDomainModel
 import com.udacity.asteroidradar.domain.repository.AsteroidRepository
 import kotlinx.coroutines.Dispatchers
@@ -20,7 +21,9 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     val pictureOfDayURL: LiveData<String>
         get() = _pictureOfTheDayURL
 
-
+    private val _pictureOfTheDay = MutableLiveData<PictureOfDay>()
+    val pictureOfDay: LiveData<PictureOfDay>
+        get() = _pictureOfTheDay
     private val asteroidDao = AsteroidsDatabase.getInstance(application).asteroidDao
     private val asteroidApi = ApiService.retrofitService
     private val imageApi = ApiService.retrofitServiceImage
@@ -57,6 +60,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     private fun getPictureOfDay() = viewModelScope.launch {
         try {
             val imageResponse = imageApi.getImageOfDay()
+            _pictureOfTheDay.postValue(imageResponse)
             if (imageResponse.mediaType == "image") {
                 _pictureOfTheDayURL.postValue(imageResponse.url)
             }

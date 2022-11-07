@@ -55,8 +55,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
                 android:layout_marginStart="50dp"
+                app:imageContentDescription="@{asteroid.isPotentiallyHazardous}"
                 app:statusIcon="@{asteroid.isPotentiallyHazardous}"
-                android:src="@drawable/ic_status_potentially_hazardous" />
+               />
         </LinearLayout>
 
 

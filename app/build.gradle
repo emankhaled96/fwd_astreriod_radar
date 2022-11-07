@@ -15,6 +15,12 @@ android {
         targetSdkVersion 33
         versionCode 1
         versionName "1.0"
+        def propertiesFile = rootProject.file("local.properties")
+        def secretsProperties = new Properties()
+        secretsProperties.load(new FileInputStream(propertiesFile))
+        defaultConfig {
+            buildConfigField("String", "NASA_API_KEY", secretsProperties['myApiNasa'])
+        }
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
