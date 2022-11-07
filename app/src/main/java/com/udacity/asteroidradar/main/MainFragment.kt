@@ -17,7 +17,10 @@ class MainFragment : Fragment() {
         val activity = requireNotNull(this.activity) {
             "You can only access the viewModel after onViewCreated()"
         }
-        ViewModelProvider(this, MainViewModel.Factory(activity.application)).get(MainViewModel::class.java)
+        ViewModelProvider(
+            this,
+            MainViewModel.Factory(activity.application)
+        ).get(MainViewModel::class.java)
 
     }
     private lateinit var binding: FragmentMainBinding
@@ -38,6 +41,7 @@ class MainFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        viewModel.getAsteroids()
         setupUI()
         setUpObservers()
     }
@@ -52,16 +56,15 @@ class MainFragment : Fragment() {
     }
 
     private fun setUpObservers() {
+
         viewModel.pictureOfDayURL.observe(viewLifecycleOwner) {
             Picasso.get().load(it).into(binding.activityMainImageOfTheDay)
         }
-        viewModel.asteroids.observe(viewLifecycleOwner ) {
-            Log.d("asteroids" , it.toString())
+        viewModel.asteroids.observe(viewLifecycleOwner) {
             adapter.submitList(it)
         }
-        viewModel.todayAsteroids.observe(viewLifecycleOwner){
+        viewModel.todayAsteroids.observe(viewLifecycleOwner) {
             adapter.submitList(it)
-
         }
 
     }
@@ -74,6 +77,10 @@ class MainFragment : Fragment() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.show_rent_menu -> viewModel.getTodayAsteroids()
+            R.id.show_all_menu -> viewModel.getAsteroids()
+            R.id.show_buy_menu -> viewModel.getAsteroids()
+
         }
-        return super.onOptionsItemSelected(item)    }
+        return super.onOptionsItemSelected(item)
+    }
 }

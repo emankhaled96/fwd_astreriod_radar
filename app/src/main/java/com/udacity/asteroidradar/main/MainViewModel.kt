@@ -10,7 +10,9 @@ import com.udacity.asteroidradar.dataSource.remote.AsteroidApi
 import com.udacity.asteroidradar.domain.dto.Asteroid
 import com.udacity.asteroidradar.domain.mapper.toDomainModel
 import com.udacity.asteroidradar.domain.repository.AsteroidRepository
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class MainViewModel(application: Application) : AndroidViewModel(application) {
 
@@ -26,20 +28,31 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     private val asteroidsRepository = AsteroidRepository(asteroidDao, asteroidApi)
 
     init {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             asteroidsRepository.refreshAsteroids()
         }
         getPictureOfDay()
     }
 
     private val _todayAsteroids = MutableLiveData<List<Asteroid>>()
-    val todayAsteroids: LiveData<List<Asteroid>>
-        get() = _todayAsteroids
-    var asteroids = asteroidsRepository.asteroids
+    val todayAsteroids: LiveData<List<Asteroid>> = _todayAsteroids
 
-    fun getTodayAsteroids() {
-     _todayAsteroids.value = asteroidsRepository.todayAsteroids.value
+    private val _savedAsteroids = MutableLiveData<List<Asteroid>>()
+    val savedAsteroids: LiveData<List<Asteroid>> = _savedAsteroids
+
+    private val _asteroids = MutableLiveData<List<Asteroid>>()
+    val asteroids: LiveData<List<Asteroid>> = _asteroids
+
+    fun getTodayAsteroids() = viewModelScope.launch(Dispatchers.IO) {
+        _todayAsteroids.postValue(
+            asteroidDao.getTodayAsteroids(DateUtils().getToday()).toDomainModel()
+        )
     }
+
+    fun getAsteroids() = viewModelScope.launch(Dispatchers.IO) {
+        _asteroids.postValue(asteroidDao.getAsteroids().toDomainModel())
+    }
+
 
     private fun getPictureOfDay() = viewModelScope.launch {
         try {

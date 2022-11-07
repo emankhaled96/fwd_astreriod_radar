@@ -2,6 +2,7 @@ package com.udacity.asteroidradar.domain.repository
 
 import android.util.Log
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import com.udacity.asteroidradar.DateUtils
 import com.udacity.asteroidradar.api.parseAsteroidsJsonResult
@@ -20,13 +21,7 @@ class AsteroidRepository(
     private val asteroidsDao: AsteroidsDao,
     private val asteroidApi: AsteroidApi
 ) {
-    val asteroids: LiveData<List<Asteroid>> = Transformations.map(asteroidsDao.getAsteroids()) {
-        it.toDomainModel()
-    }
-    val todayAsteroids: LiveData<List<Asteroid>> =
-        Transformations.map(asteroidsDao.getTodayAsteroids("2022-11-06")) {
-            it.toDomainModel()
-        }
+
 
     suspend fun refreshAsteroids() {
         withContext(Dispatchers.IO) {
